@@ -4,6 +4,8 @@ import NoteAppContainer from "./NoteAppContainer";
 import NotesManager from "./NotesManager";
 import NoteAppSearch from "./NoteAppSearch";
 
+import Swal from "sweetalert2";
+
 class NoteApp extends React.Component {
 	constructor(props) {
 		super(props);
@@ -36,20 +38,28 @@ class NoteApp extends React.Component {
 	}
 
 	onDeleteHandler(id) {
-		const userConfirmed = window.confirm("Yakin ingin menghapus catatan?");
+		Swal.fire({
+			title: "Yakin ingin menghapus catatan?",
+			text: "Catatan tidak dapat dikembalikan lagi",
+			icon: "warning",
+			showCancelButton: true,
+			confirmButtonColor: "#3085d6",
+			cancelButtonColor: "#d33",
+			confirmButtonText: "Ya, hapus!",
+		}).then((result) => {
+			if (result.isConfirmed) {
+				let notes;
+				if (this.state.searchValue !== "") {
+					notes = this.state.searchValue.filter((note) => note.id !== id);
+				}
+				notes = this.state.notes.filter((note) => note.id !== id);
+				this.setState({ notes: notes, searchValue: notes });
 
-		if (userConfirmed) {
-			let notes;
-			if (this.state.searchValue !== "") {
-				notes = this.state.searchValue.filter((note) => note.id !== id);
+				document.getElementById("search").value = "";
+				this.setState({ searchValue: "" });
+				Swal.fire("Deleted!", "Catatan berhasil dihapus.", "success");
 			}
-			notes = this.state.notes.filter((note) => note.id !== id);
-			this.setState({ notes: notes, searchValue: notes });
-
-			document.getElementById("search").value = "";
-			this.setState({ searchValue: "" });
-			alert("berhasil menghapus note");
-		}
+		});
 	}
 
 	onArsipHandler(id) {
@@ -57,6 +67,7 @@ class NoteApp extends React.Component {
 		note[0].archived = true;
 		const notes = this.state.notes;
 		this.setState({ notes });
+		Swal.fire("Selesai!", "Catatan telah diarsipkan.", "success");
 	}
 
 	onMoveHandler(id) {
@@ -64,6 +75,7 @@ class NoteApp extends React.Component {
 		note[0].archived = false;
 		const notes = this.state.notes;
 		this.setState({ notes });
+		Swal.fire("Selesai!", "Catatan keluar dari arsip", "success");
 	}
 
 	onSearchHandler(search) {
@@ -100,7 +112,7 @@ class NoteApp extends React.Component {
 		this.setState({
 			searchValue: "",
 		});
-		alert("Berhasil menambahkan catatan baru");
+		Swal.fire("Berhasil!", "Catatan berhasil ditambahkan.", "success");
 	}
 
 	render() {
