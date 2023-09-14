@@ -47,10 +47,9 @@ class NoteApp extends React.Component {
 			this.setState({ notes: notes, searchValue: notes });
 
 			document.getElementById("search").value = "";
-            this.setState({searchValue:""})
-            alert("berhasil menghapus note");
+			this.setState({ searchValue: "" });
+			alert("berhasil menghapus note");
 		}
-
 	}
 
 	onArsipHandler(id) {
@@ -98,9 +97,10 @@ class NoteApp extends React.Component {
 				],
 			};
 		});
-        this.setState({
-            searchValue: ""
-        })
+		this.setState({
+			searchValue: "",
+		});
+		alert("Berhasil menambahkan catatan baru");
 	}
 
 	render() {
